@@ -1,0 +1,10 @@
+[package]
+name = "rstennis"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+minifb = "0.25"
+png = "0.17.10"
+cairo-rs = { version = "0.18.2", features = ["png"] }
