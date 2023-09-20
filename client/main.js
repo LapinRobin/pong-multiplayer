@@ -7,21 +7,21 @@ ws.addEventListener('open', function(event) {
 ws.addEventListener('message', function(event) {
     console.log("Received:", event.data);
     const gameState = JSON.parse(event.data);
-    
 
     leftPaddleY = gameState.leftPaddleY;
     rightPaddleY = gameState.rightPaddleY;
-
+    ballX = gameState.ballX;
+    ballY = gameState.ballY;
+    // We are updating ballX and ballY based on the server's game state
 });
-
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 let paddleHeight = 100, paddleWidth = 10;
-let leftPaddleY = 300, rightPaddleY = 300;
-let ballX = 400, ballY = 300;
-let ballSpeedX = 5, ballSpeedY = 3;
+let leftPaddleY, rightPaddleY;  // Initial values will be set by the server
+let ballX, ballY;  // Initial values will be set by the server
+
 
 document.addEventListener('keydown', function(event) {
     if (event.keyCode === 38) {  // Up arrow key
@@ -31,23 +31,8 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-
-
-
 function gameLoop() {
-
-    ballX += ballSpeedX;
-    ballY += ballSpeedY;
-
-    // Ball wall collision
-    if(ballY <= 0 || ballY >= canvas.height) {
-        ballSpeedY = -ballSpeedY;
-    }
-
-    if(ballX <= 0 || ballX >= canvas.width) {
-        ballSpeedX = -ballSpeedX;
-    }
-
+    // Removed the local ball position updates; they're now managed by the server
 
     draw();
 
