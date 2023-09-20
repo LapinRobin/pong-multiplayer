@@ -1,2 +1,5 @@
 /target
 /client-rs/target
+
+.DS_Store
+.vscode
