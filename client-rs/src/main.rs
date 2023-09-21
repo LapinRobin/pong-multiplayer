@@ -10,6 +10,11 @@ use url::Url;
 const HEIGHT: usize = 600;
 const WIDTH: usize = 800;
 
+const BLACK: u32 = 0x282828;
+const WHITE: u32 = 0xfbf1c7;
+const PADDLE_HEIGHT: usize = 100;
+const PADDLE_WIDTH: usize = 10;
+
 struct MPState {
     left_paddle_y: i32,
     right_paddle_y: i32,
@@ -19,19 +24,37 @@ struct MPState {
 
 fn fill_background (buffer: &mut Vec<u32>) {
     for i in buffer.iter_mut () {
-        let red: u32 = 0x28;
-        let green: u32 = 0x28;
-        let blue: u32 = 0x28;
-        *i = (red << 16) | (green << 8) | blue;
+        *i = BLACK;
     }
 }
 
-fn draw_circle (buffer: &mut Vec<u32>, x: i32, y: i32, r: i32) {
-    
+fn draw_circle (buffer: &mut Vec<u32>, x: usize, y: usize, r: usize, color: u32) {  
+    for i in 0..=r {
+        for j in 0..=r {
+            if i*i + j*j <= r*r {
+                buffer[(y-j)*WIDTH+(x-i)] = color;
+                buffer[(y-j)*WIDTH+(x+i)] = color;
+                buffer[(y+j)*WIDTH+(x-i)] = color;
+                buffer[(y+j)*WIDTH+(x+i)] = color;
+            }
+        }
+    }
+}
+
+fn draw_rectangle (buffer: &mut Vec<u32>, x: usize, y: usize, width: usize, hight: usize, color: u32) {
+    for i in 0..=(width/2) {
+        for j in 0..=(hight/2) {
+            buffer[(y-j)*WIDTH+(x-i)] = color;
+            buffer[(y-j)*WIDTH+(x+i)] = color;
+            buffer[(y+j)*WIDTH+(x-i)] = color;
+            buffer[(y+j)*WIDTH+(x+i)] = color;
+        }
+    }
 }
 
 fn draw_next (buffer: &mut Vec<u32>, current_state: &MPState, next_state: &MPState) {
-    
+    draw_circle (buffer, current_state.ball_x as usize, current_state.ball_y as usize, 10, BLACK);
+
 }
 
 fn write_state (parsed: &serde_json::Value, state: &mut MPState) {
@@ -55,6 +78,7 @@ fn write_state (parsed: &serde_json::Value, state: &mut MPState) {
 
 fn main () {
     let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
+    fill_background (&mut buffer);
 
     let mut window = Window::new (
         "Test - EXC to exit",
