@@ -5,6 +5,7 @@ version = "0.1.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+tungstenite = "0.20.0"
 minifb = "0.25"
-png = "0.17.10"
-cairo-rs = { version = "0.18.2", features = ["png"] }
+url = "2.4.1"
+serde_json = "1.0.107"
