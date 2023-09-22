@@ -29,6 +29,9 @@ fn fill_background (buffer: &mut Vec<u32>) {
 }
 
 fn draw_circle (buffer: &mut Vec<u32>, x: usize, y: usize, r: usize, color: u32) {  
+    if x < r || x + r >= WIDTH || y < r || y + r >= HEIGHT {
+        return; 
+    }
     for i in 0..=r {
         for j in 0..=r {
             if i*i + j*j <= r*r {
