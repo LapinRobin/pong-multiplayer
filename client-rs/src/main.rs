@@ -44,9 +44,12 @@ fn draw_circle (buffer: &mut Vec<u32>, x: usize, y: usize, r: usize, color: u32)
     }
 }
 
-fn draw_rectangle (buffer: &mut Vec<u32>, x: usize, y: usize, width: usize, hight: usize, color: u32) {
+fn draw_rectangle (buffer: &mut Vec<u32>, x: usize, y: usize, width: usize, height: usize, color: u32) {
+    if x < width / 2 || x + width / 2 >= WIDTH || y < height / 2 || y + height / 2 >= HEIGHT {
+        return;
+    }
     for i in 0..=(width/2) {
-        for j in 0..=(hight/2) {
+        for j in 0..=(height/2) {
             buffer[(y-j)*WIDTH+(x-i)] = color;
             buffer[(y-j)*WIDTH+(x+i)] = color;
             buffer[(y+j)*WIDTH+(x-i)] = color;
@@ -56,7 +59,55 @@ fn draw_rectangle (buffer: &mut Vec<u32>, x: usize, y: usize, width: usize, high
 }
 
 fn draw_next (buffer: &mut Vec<u32>, current_state: &MPState, next_state: &MPState) {
+    
     draw_circle (buffer, current_state.ball_x as usize, current_state.ball_y as usize, 10, BLACK);
+
+    draw_circle (buffer, next_state.ball_x as usize, next_state.ball_y as usize, 10, WHITE);
+
+    // left paddle erase
+    draw_rectangle(
+        buffer,
+        PADDLE_WIDTH / 2,
+        current_state.left_paddle_y as usize,
+        PADDLE_WIDTH,
+        PADDLE_HEIGHT,
+        BLACK,
+    );
+
+    // right paddle erase
+    draw_rectangle(
+        buffer,
+        WIDTH - PADDLE_WIDTH / 2 - 1,
+        current_state.right_paddle_y as usize,
+        PADDLE_WIDTH,
+        PADDLE_HEIGHT,
+        BLACK,
+    );
+
+    // left paddle draw
+
+    draw_rectangle(
+        buffer,
+        PADDLE_WIDTH / 2,
+        next_state.left_paddle_y as usize,
+        PADDLE_WIDTH,
+        PADDLE_HEIGHT,
+        WHITE,
+    );
+
+    // right paddle draw
+
+    draw_rectangle(
+        buffer,
+        WIDTH - PADDLE_WIDTH / 2 - 1,
+        next_state.right_paddle_y as usize,
+        PADDLE_WIDTH,
+        PADDLE_HEIGHT,
+        WHITE,
+    );
+
+
+
 
 }
 
@@ -127,6 +178,8 @@ fn main () {
         let msg = socket.read();
         let msg = match msg {
             Ok(Message::Text(s)) => s,
+
+            // todo: other message types
             _ => { panic!() },
         };
 
